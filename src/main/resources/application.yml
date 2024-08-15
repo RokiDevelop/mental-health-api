@@ -1,0 +1,41 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /auth
+
+
+spring:
+  application:
+    name: mental-health
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+  sql:
+    init:
+      mode: always
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 10MB
+      max-file-size: 10MB
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/changelog-master.xml
+    user: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
+    driver-class-name: org.postgresql.Driver
+    # Fast generate a differential changelog
+    # https://www.baeldung.com/liquibase-refactor-schema-of-java-app#generate-the-changelog-in-intellij-idea-using-the-jpa-buddy-plugin
+
+logging:
+  level:
+    org.hibernate: DEBUG
+    org.springframework: DEBUG
