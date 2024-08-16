@@ -2,13 +2,12 @@ services:
   postgres:
     container_name: 'mental-health-postgres'
     image: 'postgres:15.6'
-    env_file: .env.dev
     environment:
       - POSTGRES_DB=${DB_BASE_NAME}-${PROFILE}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./db-data:/var/lib/postgresql/data
+      - ./db-data-${PROFILE}:/var/lib/postgresql/data
     networks:
       - api
     ports:
@@ -28,11 +27,9 @@ services:
     image: 'mental-health-api'
     ports:
       - 7070:7070
-    env_file:
-      - ".env.dev"
     environment:
       - DB_BASE_NAME=${DB_BASE_NAME}
-      - DB_USER=${DB_USERNAME}
+      - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - PROFILE=${PROFILE}
     networks:

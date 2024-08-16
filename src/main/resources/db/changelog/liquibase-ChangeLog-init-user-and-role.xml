@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-1">
+        <createSequence sequenceName="roles_id_seq"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-2">
+        <createSequence sequenceName="token_id_seq"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-3">
+        <createSequence sequenceName="users_id_seq"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-4">
+        <createTable tableName="roles">
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="roles_pkey"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="role_name" type="VARCHAR(255)"/>
+            <column name="updated_by" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-5">
+        <createTable tableName="token">
+            <column name="valid" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="TIMESTAMP WITH TIME ZONE"/>
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="token_pkey"/>
+            </column>
+            <column name="token" type="VARCHAR(2000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-6">
+        <createTable tableName="user_role">
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-7">
+        <createTable tableName="users">
+            <column name="is_enabled" type="BOOL">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP(6) WITHOUT TIME ZONE"/>
+            <column name="created_by" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_by" type="VARCHAR(255)"/>
+            <column name="username" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-8">
+        <addPrimaryKey columnNames="role_id, user_id" constraintName="user_role_pkey" tableName="user_role"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-9">
+        <addUniqueConstraint columnNames="token" constraintName="token_token_key" tableName="token"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-10">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role"
+                                 constraintName="fkj345gk1bovqvfame88rcx7yyx" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="kiruykhin_r (generated)" id="1723789536026-11">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role"
+                                 constraintName="fkt7e7djp752sqn6w22i6ocqy6q" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="roles"/>
+    </changeSet>
+</databaseChangeLog>
