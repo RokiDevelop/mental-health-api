@@ -26,12 +26,15 @@ services:
       dockerfile: Dockerfile
     image: 'mental-health-api'
     ports:
-      - 7070:7070
+      - 7070:8888
     environment:
       - DB_BASE_NAME=${DB_BASE_NAME}
       - DB_USERNAME=${DB_USERNAME}
       - DB_PASSWORD=${DB_PASSWORD}
+      - DB_PORT=${DB_PORT}
+      - DB_HOST=${DB_HOST}
       - PROFILE=${PROFILE}
+      - JWT_KEY=${JWT_KEY}
     networks:
       - api
     depends_on:

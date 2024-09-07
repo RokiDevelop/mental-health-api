@@ -12,11 +12,17 @@ import lombok.Setter;
 @Setter
 public class User extends BaseEntity {
 
+    @Enumerated(EnumType.STRING)
+    private OAuth2Provider oAuth2Provider;
+
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String password;

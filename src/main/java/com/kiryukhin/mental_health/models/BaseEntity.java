@@ -1,6 +1,8 @@
 package com.kiryukhin.mental_health.models;
 
 import jakarta.persistence.*;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,4 +41,6 @@ public abstract class BaseEntity {
     @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;
+
 }
+

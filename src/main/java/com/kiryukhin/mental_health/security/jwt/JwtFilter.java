@@ -3,6 +3,7 @@ package com.kiryukhin.mental_health.security.jwt;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kiryukhin.mental_health.security.UserDetailsServiceImpl;
+import com.kiryukhin.mental_health.services.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,6 +40,12 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         jwt = header.substring(7);
+
+        if (tokenService.findInvalidatedTokenByValue(jwt).isPresent()) {
+            sendError(response, new Exception("token is not valid!"));
+            return;
+        }
+
         DecodedJWT decodedJWT;
         String username;
         try {

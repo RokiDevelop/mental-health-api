@@ -1,4 +1,4 @@
-package com.kiryukhin.mental_health.security.jwt;
+package com.kiryukhin.mental_health.dtos.request;
 
 import com.kiryukhin.mental_health.dtos.UserDto;
 import lombok.AllArgsConstructor;

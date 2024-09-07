@@ -1,5 +1,6 @@
 package com.kiryukhin.mental_health.security;
 
+import com.kiryukhin.mental_health.models.User;
 import com.kiryukhin.mental_health.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new CustomUserDetails(userService.getByUsername(username));
+        User user = userService.getByUsername(username);
+        if (user == null) {
+            user = userService.getByEmail(username);
+        }
+
+        return new CustomUserDetails(user);
     }
 }

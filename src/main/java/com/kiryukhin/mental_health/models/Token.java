@@ -1,8 +1,9 @@
-package com.kiryukhin.mental_health.security.jwt;
+package com.kiryukhin.mental_health.models;
 
 import jakarta.persistence.*;
-import java.time.Instant;
 import lombok.Data;
+
+import java.time.Instant;
 
 @Data
 @Entity(name = "TOKEN")

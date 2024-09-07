@@ -42,8 +42,29 @@ public class UserService {
     }
 
     public UserDto createUser(UserDto dto) {
+        if (repository.existsByUsername(dto.getUsername())
+                || repository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("user is already exists!");
+        }
+        if (dto.getPassword() != null) {
+            dto.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        User userEntity = mapper.toEntity(dto);
+        userEntity.setIsSuperuser(false);
+        userEntity.setEnabled(true);
+
+        return mapper.toDto(repository.save(userEntity));
+
+    }
+
+    public UserDto createSuperuser(UserDto dto) {
         dto.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return mapper.toDto(repository.save(mapper.toEntity(dto)));
+        User userEntity = mapper.toEntity(dto);
+        userEntity.setIsSuperuser(true);
+        userEntity.setEnabled(true);
+
+        return mapper.toDto(repository.save(userEntity));
     }
 
     public UserDto updateUser(UserDto dto) {
@@ -54,4 +75,17 @@ public class UserService {
         mapper.updatePartial(existing.get(), dto);
         return mapper.toDto(repository.save(existing.get()));
     }
+
+    public User getByEmail(String email) {
+        var user = repository.findByEmailAndIsEnabledTrue(email);
+        if (user.isEmpty()) {
+            throw new EntityNotFoundException("user not found!");
+        }
+        return user.get();
+    }
+
+    public UserDto getDtoByEmail(String email) {
+        return mapper.toDto(getByEmail(email));
+    }
+
 }

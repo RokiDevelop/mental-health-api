@@ -1,7 +1,7 @@
 server:
-  port: 8888
+  port: 80
   servlet:
-    context-path: /auth
+    context-path: /api
 
 
 spring:
@@ -9,14 +9,25 @@ spring:
     name: mental-health
   datasource:
     driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      pool-name: HikariPool
+      username: ${DB_USERNAME:postgres}
+      password: ${DB_PASSWORD:postgres}
+      jdbc-url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
   jpa:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
+    show-sql: true
   sql:
     init:
       mode: always
@@ -30,13 +41,23 @@ spring:
     change-log: classpath:/db/changelog/changelog-master.xml
     user: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
+#    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
     driver-class-name: org.postgresql.Driver
     # Fast generate a differential changelog
     # https://www.baeldung.com/liquibase-refactor-schema-of-java-app#generate-the-changelog-in-intellij-idea-using-the-jpa-buddy-plugin
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+
 
 jwt-variables:
-  EXPIRES_ACCESS_TOKEN_MINUTE: 1
+  EXPIRES_ACCESS_TOKEN_MINUTE: 120
   EXPIRES_REFRESH_TOKEN_MINUTE: 1
   ISSUER: dev
   KEY: ${JWT_KEY}

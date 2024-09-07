@@ -1,24 +1,26 @@
-package com.kiryukhin.mental_health.security.jwt;
+package com.kiryukhin.mental_health.services;
+
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.kiryukhin.mental_health.dtos.UserDto;
-import com.kiryukhin.mental_health.services.UserService;
+import com.kiryukhin.mental_health.dtos.request.TokenDto;
+import com.kiryukhin.mental_health.models.Token;
+import com.kiryukhin.mental_health.repositories.TokenRepository;
 import jakarta.persistence.EntityNotFoundException;
-
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Date;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -98,4 +100,23 @@ public class TokenService {
             throw new RuntimeException("Token has expired and cannot be used!");
         }
     }
+
+
+    public void invalidateToken(String tokenValue) {
+        var existingToken = tokenRepository.findTokenByTokenAndValidFalse(tokenValue);
+        if (existingToken.isPresent()) {
+            throw new EntityNotFoundException("token already invalidated!");
+        }
+        Token token = new Token();
+        token.setUsername(JWT.decode(tokenValue).getSubject());
+        token.setValid(false);
+        token.setToken(tokenValue);
+        tokenRepository.save(token);
+    }
+
+    public Optional<Token> findInvalidatedTokenByValue(String token) {
+        return tokenRepository.findTokenByTokenAndValidFalse(token);
+    }
+
 }
+

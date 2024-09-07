@@ -1,4 +1,4 @@
-package com.kiryukhin.mental_health.dtos;
+package com.kiryukhin.mental_health.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

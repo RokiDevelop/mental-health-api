@@ -20,5 +20,16 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="add_email_field_to_user_16-08-2024" author="kiruykhin_r">
+        <addColumn tableName="users">
+            <column name="email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addUniqueConstraint
+                columnNames="email"
+                constraintName="uq_users_email"
+                tableName="users"/>
+    </changeSet>
 
 </databaseChangeLog>
