@@ -5,10 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class MentalHealthApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MentalHealthApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MentalHealthApplication.class, args);
+    }
 
 }

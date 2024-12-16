@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="00006-disable_not_null_first_and_last_name_fields" author="Roman_Kiryukhin">
+        <dropNotNullConstraint tableName="users" columnName="first_name"/>
+        <dropNotNullConstraint tableName="users" columnName="last_name"/>
+    </changeSet>
+
+</databaseChangeLog>

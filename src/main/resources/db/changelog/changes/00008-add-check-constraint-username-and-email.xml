@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="add-check-constraint-username" author="Roman_Kiryukhin">
+        <sql>
+            ALTER TABLE users
+                ADD CONSTRAINT chk_username_no_at_symbol
+                    CHECK (username NOT LIKE '%@%');
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-check-constraint-email-format" author="Roman_Kiryukhin">
+        <sql>
+            ALTER TABLE users
+                ADD CONSTRAINT chk_email_format
+                    CHECK (email ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$');
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

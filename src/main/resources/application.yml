@@ -1,28 +1,21 @@
 server:
-  port: 80
+  port:
   servlet:
     context-path: /api
 
 
 spring:
+  profiles:
+    active: dev
+  jmx:
+    enabled: false
   application:
     name: mental-health
   datasource:
     driver-class-name: org.postgresql.Driver
-#    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
-      idle-timeout: 30000
-      connection-timeout: 20000
-      max-lifetime: 1800000
-      pool-name: HikariPool
-      username: ${DB_USERNAME:postgres}
-      password: ${DB_PASSWORD:postgres}
-      jdbc-url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
+    url:
+    username:
+    password:
   jpa:
     hibernate:
       ddl-auto: validate
@@ -31,6 +24,7 @@ spring:
   sql:
     init:
       mode: always
+      mode: never
   servlet:
     multipart:
       enabled: true
@@ -39,10 +33,9 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.xml
-    user: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-#    url: jdbc:postgresql://${DB_HOST:postgres}:${DB_PORT:5432}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
+    user:
+    password:
+    url:
     driver-class-name: org.postgresql.Driver
     # Fast generate a differential changelog
     # https://www.baeldung.com/liquibase-refactor-schema-of-java-app#generate-the-changelog-in-intellij-idea-using-the-jpa-buddy-plugin
@@ -54,16 +47,33 @@ spring:
             clientId: ${GOOGLE_CLIENT_ID}
             clientSecret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
+            provider: google
+            client-id:
+            client-secret:
+            redirect-uri:
+            scope:
+              - email
+              - profile
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
 
+secrets:
+  jwt:
+    EXPIRES_ACCESS_TOKEN_MINUTE:
+    EXPIRES_REFRESH_TOKEN_MINUTE:
+    ISSUER:
+    KEY:
 
-jwt-variables:
-  EXPIRES_ACCESS_TOKEN_MINUTE: 120
-  EXPIRES_REFRESH_TOKEN_MINUTE: 1
-  ISSUER: dev
-  KEY: ${JWT_KEY}
+frontend:
+  base-url:
 
 
 logging:
   level:
-    org.hibernate: error
-    org.springframework: error
+    org.hibernate: info
+    org.springframework: info
+    org.springframework.security: debug

@@ -1,7 +1,9 @@
 package com.kiryukhin.mental_health.dtos;
 
 import jakarta.validation.constraints.Null;
+
 import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +11,15 @@ import lombok.Setter;
 @Setter
 public class BaseDto {
 
-    @Null private LocalDateTime createdDateTime;
+    @Null
+    private LocalDateTime createdDateTime;
 
-    @Null private LocalDateTime updatedDateTime;
+    @Null
+    private LocalDateTime updatedDateTime;
 
-    @Null private String createdBy;
+    @Null
+    private String createdBy;
 
-    @Null private String updatedBy;
+    @Null
+    private String updatedBy;
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="00005-rename_user_is_enable_field" author="Roman (generated)">
+        <renameColumn tableName="users" oldColumnName="is_enabled" newColumnName="is_blocked"/>
+        <update tableName="users">
+            <column name="is_blocked" valueBoolean="false"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="00005-add_user_verified_field" author="Roman (generated)">
+        <addColumn tableName="users">
+            <column name="is_verified" type="BOOLEAN" />
+        </addColumn>
+        <update tableName="users">
+            <column name="is_verified" valueBoolean="false" />
+        </update>
+        <addNotNullConstraint tableName="users" columnName="is_verified" columnDataType="BOOLEAN" />
+    </changeSet>
+
+
+</databaseChangeLog>

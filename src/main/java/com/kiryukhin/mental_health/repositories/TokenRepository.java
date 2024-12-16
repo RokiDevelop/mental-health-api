@@ -1,17 +1,15 @@
 package com.kiryukhin.mental_health.repositories;
 
-import java.util.Optional;
-
-import com.kiryukhin.mental_health.models.BaseEntity;
 import com.kiryukhin.mental_health.models.Token;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface TokenRepository extends JpaRepository<Token, Long> {
+public interface TokenRepository extends CrudRepository<Token, String> {
+    Optional<Token> findTokenByToken(String token);
 
-    Optional<Token> findTokenByTokenAndValidTrue(String token);
-
-    Optional<Token> findTokenByTokenAndValidFalse(String token);
-
+    @Override
+    <S extends Token> S save(S entity);
 }
