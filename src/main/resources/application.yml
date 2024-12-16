@@ -1,25 +1,39 @@
 server:
-  port: 8888
+  port:
   servlet:
-    context-path: /auth
+    context-path: /api
 
 
 spring:
+  profiles:
+    active: dev
+  jmx:
+    enabled: false
   application:
     name: mental-health
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url:
+    username:
+    password:
   jpa:
     hibernate:
       ddl-auto: validate
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false
+    show-sql: true
   sql:
     init:
-      mode: always
+      mode: never
+  data:
+    redis:
+      database:
+      port:
+      host:
+      username:
+      password:
+      timeout:
+      client-type: lettuce
+
   servlet:
     multipart:
       enabled: true
@@ -28,21 +42,68 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.xml
-    user: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5431}/${DB_BASE_NAME:mental-health}-${PROFILE:local}
+    user:
+    password:
+    url:
     driver-class-name: org.postgresql.Driver
     # Fast generate a differential changelog
     # https://www.baeldung.com/liquibase-refactor-schema-of-java-app#generate-the-changelog-in-intellij-idea-using-the-jpa-buddy-plugin
+  security:
+    oauth2:
+      client:
+        registration:
+          vk:
+            client-name: VK
+            client-id:
+            client-secret:
+            redirect-uri:
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope: email
+            provider: vk
+          google:
+            provider: google
+            client-id:
+            client-secret:
+            redirect-uri:
+            scope:
+              - email
+              - profile
+        provider:
+          vk:
+            authorization-uri: https://oauth.vk.com/authorize?revoke=1
+            token-uri: https://oauth.vk.com/access_token
+            user-info-uri: https://api.vk.com/method/users.get?v=5.131&fields=photo_max,email
+            user-name-attribute: response
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+  mail:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
 
-jwt-variables:
-  EXPIRES_ACCESS_TOKEN_MINUTE: 1
-  EXPIRES_REFRESH_TOKEN_MINUTE: 1
-  ISSUER: dev
-  KEY: ${JWT_KEY}
+secrets:
+  jwt:
+    EXPIRES_ACCESS_TOKEN_MINUTE:
+    EXPIRES_REFRESH_TOKEN_MINUTE:
+    ISSUER:
+    KEY:
+
+frontend:
+  base-url:
 
 
 logging:
   level:
-    org.hibernate: error
-    org.springframework: error
+    org.hibernate: info
+    org.springframework: info
+    org.springframework.security: debug

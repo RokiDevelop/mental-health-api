@@ -1,40 +1,54 @@
 package com.kiryukhin.mental_health.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import lombok.Getter;
-import lombok.Setter;
+
 @Entity
-@Table(name = "USERS")
+@Table(name = "users")
 @Getter
 @Setter
 public class User extends BaseEntity {
 
-    @Column(nullable = false)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider")
+    private AuthProvider authProvider;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
+    @NotBlank
     private String username;
+
+    @Column(nullable = false, unique = true)
+    @NotBlank
+    @Email
+    private String email;
 
     @Column(nullable = false)
     private String password;
 
-    private boolean isEnabled;
+    @Column(name = "is_blocked", nullable = false)
+    private boolean isBlocked = false;
+
+    @Column(name = "is_verified", nullable = false)
+    private boolean isVerified = false;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinTable(
-            name = "user_role",
+            name = "role2user",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
-    @Column(nullable = false)
-    private String firstName = "Name";
+    @Column
+    private String firstName;
 
-    @Column(nullable = false)
-    private String lastName = "Surname";
+    @Column
+    private String lastName;
 
     @Column(nullable = true)
     private LocalDateTime birthday;

@@ -1,6 +1,11 @@
 package com.kiryukhin.mental_health.security;
 
-import com.kiryukhin.mental_health.services.UserService;
+import com.kiryukhin.mental_health.exeptions.UserIsBlockedException;
+import com.kiryukhin.mental_health.models.AuthProvider;
+import com.kiryukhin.mental_health.models.User;
+import com.kiryukhin.mental_health.repositories.UserRepository;
+import com.kiryukhin.mental_health.servicesMapping.UserMappingService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,10 +16,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserMappingService userService;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new CustomUserDetails(userService.getByUsername(username));
+        User user = userService.getUserForUserDetails(username);
+        if (user.isBlocked()) {
+            throw new UserIsBlockedException("user is disabled");
+        }
+
+        return new CustomUserDetails(user);
+    }
+
+    @Transactional
+    public void updateAuthProvider(String username, String authProviderName) {
+        AuthProvider authType = AuthProvider.valueOf(authProviderName.toUpperCase());
+        userRepository.updateAuthProvider(username, authType);
     }
 }

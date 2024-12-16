@@ -1,30 +1,36 @@
 package com.kiryukhin.mental_health.dtos;
 
-import com.kiryukhin.mental_health.validations.CreateValidationGroup;
-import com.kiryukhin.mental_health.validations.UpdateValidationGroup;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import java.util.Set;
+import com.kiryukhin.mental_health.models.AuthProvider;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.Set;
 
 @Getter
 @Setter
 public class UserDto extends BaseDto {
-
-    @Null(groups = {CreateValidationGroup.class})
-    @NotNull(groups = {UpdateValidationGroup.class})
     private Long id;
-
-    private String name;
 
     private String username;
 
-    @NotNull(groups = {CreateValidationGroup.class})
-    @Null(groups = {UpdateValidationGroup.class})
+    private String email;
+
     private String password;
 
-    private boolean isEnabled;
+    private AuthProvider authProvider;
+
+    private boolean isBlocked;
+
+    private boolean isVerified;
 
     private Set<RoleDto> roles;
+
+    private String firstName;
+
+    private String lastName;
+
+    private LocalDateTime birthday;
+
+    private Boolean isSuperuser;
 }

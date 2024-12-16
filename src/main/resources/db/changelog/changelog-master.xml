@@ -6,6 +6,13 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <include file="db/changelog/liquibase-ChangeLog-init-user-and-role.xml"/>
-    <include file="/db/changelog/2024/changes/00001-add-user-fields.xml"/>
+    <include file="/db/changelog/changes/00001-add-user-fields.xml" />
+    <include file="/db/changelog/changes/00002-add-roles.xml"/>
+    <include file="/db/changelog/changes/00003-added_user_oauth_provider_field.xml"/>
+    <include file="/db/changelog/changes/00004-delete_user_nickname_field.xml"/>
+    <include file="/db/changelog/changes/00005-added_user_verified_field_and_renamed_is_enable_field.xml"/>
+    <include file="/db/changelog/changes/00006-disable_not_null_first_and_last_name_fields.xml"/>
+    <include file="/db/changelog/changes/00007-rename_oauth_provider_to_auth_provider.xml"/>
+    <include file="/db/changelog/changes/00008-add-check-constraint-username-and-email.xml"/>
 
 </databaseChangeLog>

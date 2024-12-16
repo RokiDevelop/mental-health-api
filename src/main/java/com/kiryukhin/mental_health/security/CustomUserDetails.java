@@ -1,9 +1,10 @@
 package com.kiryukhin.mental_health.security;
 
 import com.kiryukhin.mental_health.models.User;
-import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -45,6 +46,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.user.isEnabled();
+        return !this.user.isBlocked() && this.user.isVerified();
     }
 }
