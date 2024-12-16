@@ -1,23 +1,17 @@
 package com.kiryukhin.mental_health.models;
 
-import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.time.Instant;
 
 @Data
-@Entity(name = "TOKEN")
+@RedisHash("Token")
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    private String username;
-
-    @Column(nullable = false, unique = true, length = 2000)
     private String token;
-
-    @Column private Instant expiryDate;
-
+    private String username;
+    private Instant expiryDate;
     private boolean valid;
 }

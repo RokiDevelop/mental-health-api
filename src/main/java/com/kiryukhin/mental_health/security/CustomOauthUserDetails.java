@@ -1,6 +1,6 @@
 package com.kiryukhin.mental_health.security;
 
-import com.kiryukhin.mental_health.models.OAuth2Provider;
+import com.kiryukhin.mental_health.models.AuthProvider;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -15,7 +15,9 @@ public class CustomOauthUserDetails implements OAuth2User {
     private String name;
     private String email;
     private String avatarUrl;
-    private OAuth2Provider provider;
+    private String firstName;
+    private String lastName;
+    private AuthProvider provider;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 }

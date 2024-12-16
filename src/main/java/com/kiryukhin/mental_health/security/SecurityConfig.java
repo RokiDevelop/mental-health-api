@@ -1,36 +1,47 @@
 package com.kiryukhin.mental_health.security;
 
-import com.kiryukhin.mental_health.security.oauth.CustomAuthenticationSuccessHandler;
 import com.kiryukhin.mental_health.security.jwt.JwtAccessDeniedHandler;
 import com.kiryukhin.mental_health.security.jwt.JwtAuthenticationEntryPoint;
 import com.kiryukhin.mental_health.security.jwt.JwtFilter;
+import com.kiryukhin.mental_health.security.oauth.CustomOAuth2UserService;
+import com.kiryukhin.mental_health.security.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
+import static org.springframework.security.config.Customizer.withDefaults;
+
+@Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(jsr250Enabled = true, prePostEnabled = true, securedEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final DatabaseLoginSuccessHandler databaseLoginSuccessHandler;
+    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
     public AuthenticationManager authenticationManager(
@@ -39,40 +50,65 @@ public class SecurityConfig {
     }
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) ->
-                web.ignoring()
-                        .requestMatchers(
-                                new AntPathRequestMatcher("/"),
-                                new AntPathRequestMatcher("/auth/**"),
-                                new AntPathRequestMatcher("/public/**"));
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .headers(x -> x.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+                .cors(withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
                 .exceptionHandling(
                         handlingConfigurer -> {
                             handlingConfigurer.accessDeniedHandler(jwtAccessDeniedHandler);
                             handlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint);
                         })
-                .authorizeHttpRequests(x -> x.anyRequest().authenticated())
-                .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/roles", "/roles/**").hasRole("ADMIN")
+                        .requestMatchers("/users", "/users/**").hasRole("ADMIN")
+                        .requestMatchers(
+                                HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/public/**",
+                                "/error", "/error/**",
+                                "/auth/**", "/oauth2/**").permitAll()
+                        .anyRequest().authenticated())
+
+                .formLogin(form -> {
+                    form.loginProcessingUrl("/auth/login")
+                            .successHandler(databaseLoginSuccessHandler)
+                            .failureUrl("/auth/logout")
+                            .permitAll();
+                })
                 .logout(x -> {
                     x.logoutUrl("/auth/logout");
-                    x.logoutSuccessUrl("/auth/login?logout");
-                    x.permitAll();
+                    x.logoutSuccessHandler(customLogoutSuccessHandler);
                 })
                 .oauth2Login(
                         x -> {
-//                            x.defaultSuccessUrl("/oauth2/redirectCustom");
-                            x.successHandler(customAuthenticationSuccessHandler);
+                            x.failureUrl("/auth/logout");
+                            x.userInfoEndpoint(y -> y.userService(customOAuth2UserService));
+                            x.successHandler(oAuth2AuthenticationSuccessHandler);
                         })
-                .httpBasic(Customizer.withDefaults())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .httpBasic(withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return httpSecurity.build();
+
+        SecurityFilterChain chain = httpSecurity.build();
+        log.info("Configured security filter chain: {}", chain);
+        return chain;
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 }

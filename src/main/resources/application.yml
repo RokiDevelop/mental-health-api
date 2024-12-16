@@ -23,8 +23,17 @@ spring:
     show-sql: true
   sql:
     init:
-      mode: always
       mode: never
+  data:
+    redis:
+      database:
+      port:
+      host:
+      username:
+      password:
+      timeout:
+      client-type: lettuce
+
   servlet:
     multipart:
       enabled: true
@@ -43,10 +52,16 @@ spring:
     oauth2:
       client:
         registration:
+          vk:
+            client-name: VK
+            client-id:
+            client-secret:
+            redirect-uri:
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            scope: email
+            provider: vk
           google:
-            clientId: ${GOOGLE_CLIENT_ID}
-            clientSecret: ${GOOGLE_CLIENT_SECRET}
-            scope: profile, email
             provider: google
             client-id:
             client-secret:
@@ -55,11 +70,26 @@ spring:
               - email
               - profile
         provider:
+          vk:
+            authorization-uri: https://oauth.vk.com/authorize?revoke=1
+            token-uri: https://oauth.vk.com/access_token
+            user-info-uri: https://api.vk.com/method/users.get?v=5.131&fields=photo_max,email
+            user-name-attribute: response
           google:
             authorization-uri: https://accounts.google.com/o/oauth2/auth
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             user-name-attribute: sub
+  mail:
+    host:
+    port:
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
 
 secrets:
   jwt:
