@@ -1,6 +1,8 @@
 package com.kiryukhin.mental_health.exeptions;
 
-public class UserIsNotVerifiedException extends RuntimeException {
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+
+public class UserIsNotVerifiedException extends InternalAuthenticationServiceException {
     public UserIsNotVerifiedException(String message) {
         super(message);
     }

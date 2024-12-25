@@ -1,34 +1,40 @@
 package com.kiryukhin.mental_health.servicesLogic;
 
 import com.kiryukhin.mental_health.dtos.UserCreateDto;
-import com.kiryukhin.mental_health.dtos.UserDto;
+import com.kiryukhin.mental_health.dtos.UserUpdateDto;
+import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.models.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
-    User createUser(UserCreateDto dto);
+    UserResponseDto createUser(UserCreateDto dto);
 
-    User createSuperuser(UserCreateDto dto);
+    UserResponseDto createSuperuser(UserCreateDto dto);
 
-    List<User> getUserList();
+    List<UserResponseDto> getUserList();
 
-    User getById(Long id);
+    UserResponseDto getById(Long id);
 
-    User getByUsernameOrEmail(String usernameOrEmail);
+    UserResponseDto getByUsernameOrEmail(String usernameOrEmail);
 
-    User getByUsernameOrEmailAndIsBlockedFalse(String usernameOrEmail);
+    UserResponseDto getByUsernameOrEmailAndIsBlockedFalse(String usernameOrEmail);
 
-    User getByUsername(String username);
+    UserResponseDto getByUsername(String username);
 
-    User getByUsernameAndIsBlockedFalse(String username);
+    UserResponseDto getByUsernameAndIsBlockedFalse(String username);
 
-    User getByEmail(String email);
+    UserResponseDto getByEmail(String email);
 
-    User getByEmailAndIsBlockedFalse(String email);
+    UserResponseDto getByEmailAndIsBlockedFalse(String email);
 
-    User updateUserByUsername(String username, UserDto dto);
+    UserResponseDto updateUserByUsername(String username, UserUpdateDto dto);
 
-    User updateUserByEmail(String email, UserDto userDto);
+    UserResponseDto updateUserByEmail(String email, UserUpdateDto userDto);
+
+    User getUserForUserDetails(String usernameOrEmail);
+
+    Set<String> findUsernameSetByUsername(String username);
 }

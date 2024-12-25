@@ -22,6 +22,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Value("${frontend.base-url}")
     private String frontendBaseUrl;
+
+    @Value("${frontend.endpoints.callback-success-url}")
+    private String callbackSuccessUrl;
+
     private final TokenService tokenService;
     final private UserDetailsServiceImpl userService;
 
@@ -38,7 +42,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected void handle(
             HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
-        String targetUrl = frontendBaseUrl + "callback_success";
+        String targetUrl = frontendBaseUrl + callbackSuccessUrl;
 
         if (authentication.getPrincipal() instanceof CustomOauthUserDetails user) {
             TokenDto token = tokenService.generateTokenPairs(user.getEmail());

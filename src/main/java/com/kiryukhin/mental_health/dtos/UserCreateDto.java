@@ -1,30 +1,32 @@
 package com.kiryukhin.mental_health.dtos;
 
 import com.kiryukhin.mental_health.models.AuthProvider;
+import com.kiryukhin.mental_health.validations.UniqueUsername;
+import com.kiryukhin.mental_health.validations.ValidPassword;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserCreateDto extends BaseDto {
     @NotNull
+    @UniqueUsername
     private String username;
 
     @NotNull
+    @Email
     private String email;
 
     @NotNull
+    @ValidPassword
     private String password;
 
     private AuthProvider authProvider;
-
-    private boolean isBlocked;
-
-    private boolean isVerified;
 
     private Set<RoleDto> roles;
 
@@ -33,6 +35,4 @@ public class UserCreateDto extends BaseDto {
     private String lastName;
 
     private LocalDateTime birthday;
-
-    private Boolean isSuperuser;
 }

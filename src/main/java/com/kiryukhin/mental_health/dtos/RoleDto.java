@@ -1,19 +1,12 @@
 package com.kiryukhin.mental_health.dtos;
 
-import com.kiryukhin.mental_health.validations.CreateValidationGroup;
-import com.kiryukhin.mental_health.validations.UpdateValidationGroup;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
-@Getter
-@Setter
-public class RoleDto extends BaseDto {
-
-    @Null(groups = {CreateValidationGroup.class})
-    @NotNull(groups = {UpdateValidationGroup.class})
+@Data
+public class RoleDto {
     private Long id;
 
+    @NotBlank
     private String name;
 }

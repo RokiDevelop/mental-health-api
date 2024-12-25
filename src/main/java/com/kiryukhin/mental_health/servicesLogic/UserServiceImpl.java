@@ -1,7 +1,8 @@
 package com.kiryukhin.mental_health.servicesLogic;
 
 import com.kiryukhin.mental_health.dtos.UserCreateDto;
-import com.kiryukhin.mental_health.dtos.UserDto;
+import com.kiryukhin.mental_health.dtos.UserUpdateDto;
+import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.exeptions.RegistrationFailedException;
 import com.kiryukhin.mental_health.exeptions.UserIsBlockedException;
 import com.kiryukhin.mental_health.mappers.UserMapper;
@@ -10,6 +11,7 @@ import com.kiryukhin.mental_health.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -26,9 +29,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final UserMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
-    public User createUser(UserCreateDto dto) {
+    public UserResponseDto createUser(UserCreateDto dto) {
         User userEntity = mapper.userCreateDtoToEntity(dto);
         if (repository.existsByUsername(userEntity.getUsername())
                 || repository.existsByEmail(userEntity.getEmail())) {
@@ -42,98 +46,139 @@ public class UserServiceImpl implements UserService {
             userEntity.setPassword(generateRandomHash());
         }
 
-        userEntity.setIsSuperuser(false);
+        userEntity.setSuperuser(false);
         userEntity.setBlocked(false);
         userEntity.setVerified(false);
 
-        return repository.save(userEntity);
+        return userMapper.toUserResponseDto(
+                repository.save(userEntity));
     }
 
     @Override
-    public User createSuperuser(UserCreateDto dto) {
+    public UserResponseDto createSuperuser(UserCreateDto dto) {
         User userEntity = mapper.userCreateDtoToEntity(dto);
         userEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
-        userEntity.setIsSuperuser(true);
+        userEntity.setSuperuser(true);
         userEntity.setBlocked(false);
         userEntity.setVerified(true);
 
-        return repository.save(userEntity);
+        return userMapper.toUserResponseDto(
+                repository.save(userEntity));
     }
 
     @Override
-    public List<User> getUserList() {
-        return repository.findAll();
+    public List<UserResponseDto> getUserList() {
+        List<User> users = repository.findAll();
+        return users.stream().map(
+                userMapper::toUserResponseDto).toList();
     }
 
     @Override
-    public User getById(Long id) {
-        return repository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public UserResponseDto getById(Long id) {
+        User user = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByUsernameOrEmail(String usernameOrEmail) {
+    public UserResponseDto getByUsernameOrEmail(String usernameOrEmail) {
         Optional<User> userOptional = repository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        return userOptional.orElseThrow(EntityNotFoundException::new);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByUsernameOrEmailAndIsBlockedFalse(String usernameOrEmail) {
+    public UserResponseDto getByUsernameOrEmailAndIsBlockedFalse(String usernameOrEmail) {
         Optional<User> userOptional = repository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
-        User user = userOptional.orElseThrow(EntityNotFoundException::new);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
         if (user.isBlocked()) {
             throw new UserIsBlockedException("user is blocked!");
         }
-        return user;
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByUsername(String username) {
+    public UserResponseDto getByUsername(String username) {
+        log.info(this.getClass().getName() + " getByUsername.");
         Optional<User> userOptional = repository.findByUsername(username);
-        User user = userOptional.orElseThrow(EntityNotFoundException::new);
-        return user;
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username: " + username));
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByUsernameAndIsBlockedFalse(String username) {
+    public UserResponseDto getByUsernameAndIsBlockedFalse(String username) {
         Optional<User> userOptional = repository.findByUsername(username);
-        User user = userOptional.orElseThrow(EntityNotFoundException::new);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username: " + username));
 
         if (user.isBlocked()) {
             throw new UserIsBlockedException("user is blocked!");
         }
-        return user;
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByEmail(String email) {
+    public UserResponseDto getByEmail(String email) {
         Optional<User> userOptional = repository.findByEmail(email);
-        User user = userOptional.orElseThrow(EntityNotFoundException::new);
-        return user;
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with email: " + email));
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User getByEmailAndIsBlockedFalse(String email) throws UserIsBlockedException {
+    public UserResponseDto getByEmailAndIsBlockedFalse(String email) throws UserIsBlockedException {
         Optional<User> userOptional = repository.findByEmail(email);
-        User user = userOptional.orElseThrow(EntityNotFoundException::new);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with email: " + email));
         if (user.isBlocked()) {
             throw new UserIsBlockedException("user is blocked");
         }
-        return user;
+        return userMapper.toUserResponseDto(user);
     }
 
     @Override
-    public User updateUserByUsername(String username, UserDto dto) {
-        var user = getByUsernameAndIsBlockedFalse(username);
-        mapper.updatePartialFromUserDto(user, dto);
-        return repository.save(user);
+    public UserResponseDto updateUserByUsername(String username, UserUpdateDto userUpdateDto) {
+        Optional<User> userOptional = repository.findByUsername(username);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username: " + username));
+
+        if (user.isBlocked()) {
+            throw new UserIsBlockedException("user is blocked!");
+        }
+        mapper.updatePartialFromUserUpdateDto(user, userUpdateDto);
+
+        return userMapper.toUserResponseDto(
+                repository.save(user));
     }
 
     @Override
-    public User updateUserByEmail(String email, UserDto dto) {
-        var user = getByEmailAndIsBlockedFalse(email);
-        mapper.updatePartialFromUserDto(user, dto);
-        return repository.save(user);
+    public UserResponseDto updateUserByEmail(String email, UserUpdateDto dto) {
+        Optional<User> userOptional = repository.findByEmail(email);
+        User user = userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with email: " + email));
+
+        if (user.isBlocked()) {
+            throw new UserIsBlockedException("user is blocked!");
+        }
+        mapper.updatePartialFromUserUpdateDto(user, dto);
+        return userMapper.toUserResponseDto(
+                repository.save(user));
+    }
+
+    @Override
+    public User getUserForUserDetails(String usernameOrEmail) {
+        Optional<User> userOptional = repository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        return userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
+    }
+
+    @Override
+    public Set<String> findUsernameSetByUsername(String username) {
+        String pattern = username + "%";
+        return repository.findUsernameSetByUsernameLike(pattern);
     }
 
     private String generateRandomHash() {

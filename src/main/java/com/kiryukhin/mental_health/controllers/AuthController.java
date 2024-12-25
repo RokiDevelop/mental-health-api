@@ -4,7 +4,7 @@ import com.kiryukhin.mental_health.dtos.requests.RefreshTokenRequest;
 import com.kiryukhin.mental_health.dtos.requests.RegistrationRequest;
 import com.kiryukhin.mental_health.dtos.requests.TokenDto;
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
-import com.kiryukhin.mental_health.servicesMapping.AuthMappingService;
+import com.kiryukhin.mental_health.servicesLogic.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,16 +21,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 public class AuthController {
 
-    private final AuthMappingService authMappingService;
+    private final AuthService authService;
 
     @PostMapping("/refresh-token")
     public ResponseEntity<TokenDto> refreshToken(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
-        return ResponseEntity.ok().body(authMappingService.refreshToken(refreshTokenRequest));
+        return ResponseEntity.ok().body(authService.refreshToken(refreshTokenRequest));
     }
 
     @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@RequestBody RegistrationRequest registrationRequest) {
-        UserResponseDto dto = authMappingService.signUp(registrationRequest);
+        UserResponseDto dto = authService.signUp(registrationRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(dto);
     }
 }
