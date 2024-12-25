@@ -1,15 +1,11 @@
 package com.kiryukhin.mental_health.dtos;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserUpdateDto extends BaseDto {
     private String firstName;
     private String lastName;

@@ -100,6 +100,17 @@ secrets:
 
 frontend:
   base-url:
+  endpoints:
+    confirm-action-endpoint:
+    reset-password-endpoint:
+    activate-account-endpoint:
+    callback-failure-url:
+    callback-success-url:
+
+token:
+  verification:
+    expiry:
+      duration: 600
 
 
 logging:

@@ -6,10 +6,10 @@ import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.models.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface UserService {
 
-    User createUser(UserCreateDto dto);
     UserResponseDto createUser(UserCreateDto dto);
 
     UserResponseDto createSuperuser(UserCreateDto dto);

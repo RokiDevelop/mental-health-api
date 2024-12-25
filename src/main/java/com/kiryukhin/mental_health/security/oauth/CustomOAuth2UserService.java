@@ -3,8 +3,11 @@ package com.kiryukhin.mental_health.security.oauth;
 import com.kiryukhin.mental_health.dtos.RoleDto;
 import com.kiryukhin.mental_health.dtos.UserCreateDto;
 import com.kiryukhin.mental_health.dtos.UserDto;
+import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.exeptions.UserIsBlockedException;
 import com.kiryukhin.mental_health.mappers.UserMapper;
+import com.kiryukhin.mental_health.models.User;
+import com.kiryukhin.mental_health.repositories.UserRepository;
 import com.kiryukhin.mental_health.security.CustomOauthUserDetails;
 import com.kiryukhin.mental_health.servicesLogic.RoleService;
 import com.kiryukhin.mental_health.servicesLogic.UserService;
@@ -32,6 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final RoleService roleService;
     private final List<OAuth2UserInfoExtractor> oAuth2UserInfoExtractors;
     private final UserMapper userMapper;
+    private final UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws UserIsBlockedException {
@@ -50,23 +54,31 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             customUserDetails = oAuth2UserInfoExtractorOptional.get().extractUserInfo(oAuth2User);
         }
 
-        UserDto user = upsertUser(customUserDetails);
+        UserResponseDto user = upsertUser(customUserDetails);
         customUserDetails.setId(user.getId());
 
         return customUserDetails;
     }
 
-    private UserDto upsertUser(CustomOauthUserDetails customUserDetails) throws UserIsBlockedException {
-        UserDto existingUser;
+    private UserResponseDto upsertUser(CustomOauthUserDetails customUserDetails) throws UserIsBlockedException {
+        UserDto existingUserDto;
         try {
-            existingUser = userMapper.toUserDto(
-                    userService.getByEmail(
-                            customUserDetails.getEmail()));
-            boolean isUpdated = updateUserDto(existingUser, customUserDetails);
-            if (isUpdated) {
-                userService.updateUserByEmail(existingUser.getEmail(), existingUser);
+            User existingUser = userRepository.getByEmail(
+                    customUserDetails.getEmail());
+            if (existingUser == null) {
+                throw new EntityNotFoundException();
             }
-            return existingUser;
+
+            if (existingUser.isBlocked()) {
+                throw new UserIsBlockedException("User is blocked");
+            }
+            existingUserDto = userMapper.toUserDto(existingUser);
+            boolean isUpdated = updateUserDto(existingUserDto, customUserDetails);
+            if (isUpdated) {
+                userMapper.updatePartialFromUserDto(existingUser, existingUserDto);
+                userRepository.save(existingUser);
+            }
+            return userMapper.toUserResponseDto(existingUser);
 
         } catch (EntityNotFoundException e) {
             RoleDto role =
@@ -78,12 +90,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             user.setUsername(customUserDetails.getUsername());
             user.setEmail(customUserDetails.getEmail());
             user.setAuthProvider(customUserDetails.getProvider());
-            user.setBlocked(false);
-            user.setVerified(false);
             user.setRoles(Set.of(role));
-            return userMapper.toUserDto(
-                    userService.createUser(user)
-            );
+            return userService.createUser(user);
         } catch (UserIsBlockedException e) {
             log.error(e.getMessage());
             throw e;

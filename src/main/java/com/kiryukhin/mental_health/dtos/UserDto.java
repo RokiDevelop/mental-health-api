@@ -1,14 +1,14 @@
 package com.kiryukhin.mental_health.dtos;
 
 import com.kiryukhin.mental_health.models.AuthProvider;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserDto extends BaseDto {
     private Long id;
 

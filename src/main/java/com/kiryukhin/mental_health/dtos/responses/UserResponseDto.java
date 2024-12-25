@@ -3,14 +3,14 @@ package com.kiryukhin.mental_health.dtos.responses;
 import com.kiryukhin.mental_health.dtos.BaseDto;
 import com.kiryukhin.mental_health.dtos.RoleDto;
 import com.kiryukhin.mental_health.models.AuthProvider;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class UserResponseDto extends BaseDto {
     private Long id;
 

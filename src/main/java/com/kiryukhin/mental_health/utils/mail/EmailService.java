@@ -1,13 +1,15 @@
 package com.kiryukhin.mental_health.utils.mail;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public interface EmailService {
-    void sendSimpleEmail(String to, String subject, String text);
 
-    void sendHtmlEmail(String to, String subject, String htmlBody);
+    void sendRegistrationVerifier(@NotBlank @Email String to, @NotBlank String token);
 
-    void sendRegistrationVerifier(String to, String confirmationLink);
+    void sendUpdatedPassword(@NotBlank @Email String to, @NotBlank @Email String email, @NotBlank String login, @NotBlank String password);
 
-    void sendUpdatedPassword(String to, String email, String login, String password);
+    void sendResetPassword(@NotBlank @Email String to, @NotBlank String token);
 
-    void sendResetPassword(String to, String confirmationLink);
+    void sendConfirmAction(@NotBlank @Email String to, @NotBlank String token);
 }
