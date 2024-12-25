@@ -4,7 +4,7 @@ import com.kiryukhin.mental_health.exeptions.UserIsBlockedException;
 import com.kiryukhin.mental_health.models.AuthProvider;
 import com.kiryukhin.mental_health.models.User;
 import com.kiryukhin.mental_health.repositories.UserRepository;
-import com.kiryukhin.mental_health.servicesMapping.UserMappingService;
+import com.kiryukhin.mental_health.servicesLogic.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserMappingService userService;
+    private final UserService userService;
     private final UserRepository userRepository;
 
     @Override

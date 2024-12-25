@@ -1,7 +1,7 @@
 package com.kiryukhin.mental_health.controllers;
 
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
-import com.kiryukhin.mental_health.servicesMapping.UserMappingService;
+import com.kiryukhin.mental_health.servicesLogic.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +15,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserMappingService userMappingService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<?> getAllUsers() {
-        List<UserResponseDto> users = userMappingService.getUserList();
+        List<UserResponseDto> users = userService.getUserList();
         return ResponseEntity.ok().body(users);
     }
 

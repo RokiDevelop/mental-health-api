@@ -7,6 +7,7 @@ import com.kiryukhin.mental_health.dtos.requests.PasswordForgetRequest;
 import com.kiryukhin.mental_health.dtos.requests.RefreshTokenRequest;
 import com.kiryukhin.mental_health.dtos.requests.SetNewPasswordRequest;
 import com.kiryukhin.mental_health.dtos.requests.TokenDto;
+import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.exeptions.RegistrationFailedException;
 import com.kiryukhin.mental_health.mappers.UserMapper;
 import com.kiryukhin.mental_health.models.User;
@@ -33,8 +34,9 @@ class AuthServiceImpl implements AuthService {
     private final UserMapper userMapper;
 
     @Override
-    public User signUp(UserCreateDto userCreateDto) {
+    public UserResponseDto signUp(RegistrationRequest registrationRequest) {
         try {
+            UserCreateDto userCreateDto = registrationMapper.toUserCreateDto(registrationRequest);
             RoleDto role =
                     roleService.getRoles().stream()
                             .filter(x -> x.getName().equals("ROLE_USER"))
@@ -44,8 +46,11 @@ class AuthServiceImpl implements AuthService {
             userCreateDto.setRoles(Set.of(role));
             User user = userService.createUser(userCreateDto);
             emailService.sendRegistrationVerifier(user.getEmail(), "http://localhost:5173/confirm_email?code=dwef323t23432tf24hewmfrkngqerngerngenqeh34h34hrngekrqngerkh34hgnqelkrt3oijgporibkjneoknrgf");
+            UserResponseDto userResponseDto = userService.createUser(userCreateDto);
 
             return user;
+
+            return userResponseDto;
         } catch (RegistrationFailedException e) {
             throw e;
         } catch (ObjectNotFoundException e) {

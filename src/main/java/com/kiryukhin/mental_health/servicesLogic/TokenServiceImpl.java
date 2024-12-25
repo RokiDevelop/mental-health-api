@@ -11,7 +11,6 @@ import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.exeptions.TokenFailedException;
 import com.kiryukhin.mental_health.models.Token;
 import com.kiryukhin.mental_health.repositories.TokenRepository;
-import com.kiryukhin.mental_health.servicesMapping.UserMappingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +29,7 @@ import java.util.UUID;
 class TokenServiceImpl implements TokenService {
     private final TokenRepository tokenRepository;
 
-    private final UserMappingService userService;
+    private final UserService userService;
 
     @Value("${secrets.jwt.KEY}")
     private String jwtKey;
