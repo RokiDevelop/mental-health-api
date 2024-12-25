@@ -2,9 +2,7 @@ package com.kiryukhin.mental_health.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -13,6 +11,8 @@ import java.util.Set;
 @Table(name = "users")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
@@ -20,11 +20,9 @@ public class User extends BaseEntity {
     private AuthProvider authProvider;
 
     @Column(nullable = false, unique = true)
-    @NotBlank
     private String username;
 
     @Column(nullable = false, unique = true)
-    @NotBlank
     @Email
     private String email;
 
@@ -54,5 +52,5 @@ public class User extends BaseEntity {
     private LocalDateTime birthday;
 
     @Column(nullable = false)
-    private Boolean isSuperuser = false;
+    private boolean isSuperuser = false;
 }

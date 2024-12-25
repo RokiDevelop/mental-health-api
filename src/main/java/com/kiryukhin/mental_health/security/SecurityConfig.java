@@ -4,6 +4,7 @@ import com.kiryukhin.mental_health.security.jwt.JwtAccessDeniedHandler;
 import com.kiryukhin.mental_health.security.jwt.JwtAuthenticationEntryPoint;
 import com.kiryukhin.mental_health.security.jwt.JwtFilter;
 import com.kiryukhin.mental_health.security.oauth.CustomOAuth2UserService;
+import com.kiryukhin.mental_health.security.oauth.OAuth2AuthenticationFailureHandler;
 import com.kiryukhin.mental_health.security.oauth.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,8 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -20,6 +19,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -46,12 +46,8 @@ public class SecurityConfig {
     private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-
-    @Bean
-    public AuthenticationManager authenticationManager(
-            final AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -72,13 +68,13 @@ public class SecurityConfig {
                                 HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/public/**",
                                 "/error", "/error/**",
-                                "/auth/**", "/oauth2/**").permitAll()
+                                "/auth/**", "/oauth2/**", "/verification/**").permitAll()
                         .anyRequest().authenticated())
 
                 .formLogin(form -> {
                     form.loginProcessingUrl("/auth/login")
                             .successHandler(databaseLoginSuccessHandler)
-                            .failureUrl("/auth/logout")
+                            .failureHandler(authenticationFailureHandler)
                             .permitAll();
                 })
                 .logout(x -> {
@@ -87,9 +83,9 @@ public class SecurityConfig {
                 })
                 .oauth2Login(
                         x -> {
-                            x.failureUrl("/auth/logout");
                             x.userInfoEndpoint(y -> y.userService(customOAuth2UserService));
                             x.successHandler(oAuth2AuthenticationSuccessHandler);
+                            x.failureHandler(oAuth2AuthenticationFailureHandler);
                         })
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

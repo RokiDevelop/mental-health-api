@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -153,6 +154,16 @@ class TokenServiceImpl implements TokenService {
         token.setValid(false);
         token.setToken(jwt);
         tokenRepository.save(token);
+    }
+
+    @Override
+    public void invalidateAllTokensForUser(String username) {
+        List<Token> userTokens = tokenRepository.getAllByUsername(username);
+
+        for (Token token : userTokens) {
+            token.setValid(false);
+            tokenRepository.save(token);
+        }
     }
 
 

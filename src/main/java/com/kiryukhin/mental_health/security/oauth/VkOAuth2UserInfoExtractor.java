@@ -1,7 +1,10 @@
 package com.kiryukhin.mental_health.security.oauth;
 
+import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.models.AuthProvider;
 import com.kiryukhin.mental_health.security.CustomOauthUserDetails;
+import com.kiryukhin.mental_health.servicesLogic.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -9,9 +12,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class VkOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
+
+    private final UserService userService;
 
     @Override
     public CustomOauthUserDetails extractUserInfo(OAuth2User oAuth2User) {
@@ -38,18 +45,19 @@ public class VkOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
         Map<String, Object> userRequestAttrs = oAuth2UserRequest.getAdditionalParameters();
 
         String email = (String) userRequestAttrs.get("email");
+        String user_id = Integer.toString((Integer) userRequestAttrs.get("user_id"));
 
-        String user_id;
-        if (userRequestAttrs.get("user_id") instanceof String) {
-            user_id = (String) userRequestAttrs.get("user_id");
-        } else if (userRequestAttrs.get("user_id") instanceof Integer) {
-            user_id = Integer.toString((Integer) userRequestAttrs.get("user_id"));
+        UserResponseDto exist_user = userService.getByEmail(email);
+        if (exist_user != null) {
+            customUserDetails.setUsername(exist_user.getUsername());
         } else {
-            user_id = RandomStringUtils.randomAlphanumeric(6, 8);
+            String username = generateUniqueUsername(email, user_id);
+            customUserDetails.setUsername(username);
         }
 
         customUserDetails.setEmail(email);
-        customUserDetails.setUsername(email.split("@")[0].concat(user_id));
+        String username = generateUniqueUsername(email, user_id);
+        customUserDetails.setUsername(username);
 
         return customUserDetails;
     }
@@ -66,5 +74,22 @@ public class VkOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
                 .findFirst()
                 .map(attrs -> attrs.getOrDefault(attr, "").toString())
                 .orElse("");
+    }
+
+    private String generateUniqueUsername(String email, String user_id) {
+        String username_base = email.split("@")[0];
+        String username_suffix;
+        Set<String> exist_usernames = userService.findUsernameSetByUsername(username_base);
+
+        byte i = 0;
+        do {
+            if (i <= user_id.length()) {
+                username_suffix = user_id.substring(0, i);
+                i++;
+            } else {
+                username_suffix = RandomStringUtils.randomAlphanumeric(6, 8);
+            }
+        } while (exist_usernames.contains(username_base + username_suffix));
+        return username_base + username_suffix;
     }
 }
