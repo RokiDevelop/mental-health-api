@@ -34,6 +34,11 @@ spring:
       timeout:
       client-type: lettuce
 
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+    type: simple
+
   servlet:
     multipart:
       enabled: true
