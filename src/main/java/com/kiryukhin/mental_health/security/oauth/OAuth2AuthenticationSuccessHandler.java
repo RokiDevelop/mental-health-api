@@ -3,7 +3,7 @@ package com.kiryukhin.mental_health.security.oauth;
 import com.kiryukhin.mental_health.dtos.requests.TokenDto;
 import com.kiryukhin.mental_health.security.CustomOauthUserDetails;
 import com.kiryukhin.mental_health.security.UserDetailsServiceImpl;
-import com.kiryukhin.mental_health.servicesLogic.TokenService;
+import com.kiryukhin.mental_health.services.users.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

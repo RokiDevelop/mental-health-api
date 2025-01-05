@@ -4,7 +4,7 @@ import com.kiryukhin.mental_health.dtos.requests.RefreshTokenRequest;
 import com.kiryukhin.mental_health.dtos.requests.RegistrationRequest;
 import com.kiryukhin.mental_health.dtos.requests.TokenDto;
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
-import com.kiryukhin.mental_health.servicesLogic.AuthService;
+import com.kiryukhin.mental_health.services.users.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

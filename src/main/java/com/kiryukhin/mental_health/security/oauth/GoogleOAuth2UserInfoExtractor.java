@@ -3,9 +3,10 @@ package com.kiryukhin.mental_health.security.oauth;
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.models.AuthProvider;
 import com.kiryukhin.mental_health.security.CustomOauthUserDetails;
-import com.kiryukhin.mental_health.servicesLogic.UserService;
+import com.kiryukhin.mental_health.services.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -23,10 +24,10 @@ public class GoogleOAuth2UserInfoExtractor implements OAuth2UserInfoExtractor {
         CustomOauthUserDetails customUserDetails = new CustomOauthUserDetails();
         String email = retrieveAttr("email", oAuth2User);
 
-        UserResponseDto exist_user = userService.getByEmail(email);
-        if (exist_user != null) {
+        try {
+            UserResponseDto exist_user = userService.getByEmail(email);
             customUserDetails.setUsername(exist_user.getUsername());
-        } else {
+        } catch (UsernameNotFoundException e) {
             String username = generateUniqueUsername(oAuth2User);
             customUserDetails.setUsername(username);
         }

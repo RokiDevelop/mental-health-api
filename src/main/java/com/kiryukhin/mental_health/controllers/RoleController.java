@@ -1,7 +1,7 @@
 package com.kiryukhin.mental_health.controllers;
 
 import com.kiryukhin.mental_health.dtos.RoleDto;
-import com.kiryukhin.mental_health.servicesLogic.RoleService;
+import com.kiryukhin.mental_health.services.users.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

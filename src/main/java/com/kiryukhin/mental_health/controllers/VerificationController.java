@@ -4,7 +4,7 @@ import com.kiryukhin.mental_health.dtos.requests.ActivateAccountRequest;
 import com.kiryukhin.mental_health.dtos.requests.ConfirmActionRequest;
 import com.kiryukhin.mental_health.dtos.requests.NewPasswordRequest;
 import com.kiryukhin.mental_health.dtos.requests.UsernameRequest;
-import com.kiryukhin.mental_health.servicesLogic.AuthService;
+import com.kiryukhin.mental_health.services.users.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

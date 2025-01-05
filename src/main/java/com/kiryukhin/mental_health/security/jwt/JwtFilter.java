@@ -2,7 +2,7 @@ package com.kiryukhin.mental_health.security.jwt;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kiryukhin.mental_health.servicesLogic.TokenService;
+import com.kiryukhin.mental_health.services.users.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

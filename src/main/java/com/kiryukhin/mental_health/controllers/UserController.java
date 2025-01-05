@@ -1,7 +1,7 @@
 package com.kiryukhin.mental_health.controllers;
 
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
-import com.kiryukhin.mental_health.servicesLogic.UserService;
+import com.kiryukhin.mental_health.services.users.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
