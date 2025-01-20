@@ -24,9 +24,9 @@ public class CourseTag {
     @Column(nullable = false, unique = true, length = 50, name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<AudioCourse> audioCourses = new HashSet<>();
 
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     private Set<VideoCourse> videoCourses = new HashSet<>();
 }

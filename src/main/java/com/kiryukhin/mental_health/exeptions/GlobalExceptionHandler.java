@@ -1,5 +1,8 @@
 package com.kiryukhin.mental_health.exeptions;
 
+import jakarta.persistence.EntityNotFoundException;
+import org.apache.coyote.BadRequestException;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
