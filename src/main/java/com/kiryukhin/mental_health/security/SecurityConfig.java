@@ -64,6 +64,8 @@ public class SecurityConfig {
                         .requestMatchers("/admin", "/admin/**").hasRole("ADMIN")
                         .requestMatchers("/roles", "/roles/**").hasRole("ADMIN")
                         .requestMatchers("/users", "/users/**").hasRole("ADMIN")
+                        .requestMatchers("/files**").permitAll()
+
                         .requestMatchers(
                                 HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/public/**",

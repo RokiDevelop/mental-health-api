@@ -96,6 +96,8 @@ spring:
           auth: true
           starttls.enable: true
 
+file-storage:
+  type: # yandex_s3 or local
 secrets:
   jwt:
     EXPIRES_ACCESS_TOKEN_MINUTE:
