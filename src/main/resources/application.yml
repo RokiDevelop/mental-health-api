@@ -105,6 +105,14 @@ file-storage:
   local:
     path:
     endpoint: /files
+  yandex_s3:
+    endpoint:
+    access-key:
+    secret-key:
+    region:
+    bucket-name:
+    is-closed:
+
 secrets:
   jwt:
     EXPIRES_ACCESS_TOKEN_MINUTE:

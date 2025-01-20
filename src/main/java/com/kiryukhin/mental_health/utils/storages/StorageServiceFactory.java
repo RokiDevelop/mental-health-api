@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class StorageServiceFactory {
 
     private final FileStorageConfig fileStorageConfig;
-    private final S3StorageServiceImpl s3StorageService;
+    private final YandexCloudS3StorageServiceImpl s3StorageService;
     private final LocalStorageServiceImpl localStorageService;
 
     public StorageService getStorageService() {
