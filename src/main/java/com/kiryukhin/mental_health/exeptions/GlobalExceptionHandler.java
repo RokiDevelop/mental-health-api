@@ -20,6 +20,15 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(UserAlreadyAssignedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleRegistrationFailedException(UserAlreadyAssignedException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setTitle("User Already Assigned Exception");
+        problemDetail.setProperty("error", "UserAlreadyAssignedException");
+        return problemDetail;
+    }
+
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
