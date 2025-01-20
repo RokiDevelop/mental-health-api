@@ -1,0 +1,175 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="00010-1-create-course-topics-table" author="Roman_Kiryukhin">
+        <createTable tableName="course_topics">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="course_topics"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00010-2-create-course-tags-table" author="Roman_Kiryukhin">
+        <createTable tableName="course_tags">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="course_tags"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00010-3-create-audio-courses-table" author="Roman_Kiryukhin">
+        <createTable tableName="audio_courses">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="text"/>
+            <column name="details" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="price" type="decimal(20,2)"/>
+            <column name="price_with_discount" type="decimal(20,2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_discounted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_published" type="boolean" defaultValue="false"/>
+            <column name="image_preview_url" type="varchar(1024)"/>
+            <column name="topic_id" type="bigserial"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="updated_by" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="audio_courses"
+                                 baseColumnNames="topic_id"
+                                 referencedTableName="course_topics"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_audio_course_topic"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="audio_courses" constraintName="fk_audio_course_topic"/>
+            <dropTable tableName="audio_courses"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00010-4-create-video-courses-table" author="Roman_Kiryukhin">
+        <createTable tableName="video_courses">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="varchar(255)"/>
+            <column name="description" type="text"/>
+            <column name="details" type="TEXT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="price" type="decimal(20,2)"/>
+            <column name="price_with_discount" type="decimal(20,2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="is_discounted" type="boolean" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_published" type="boolean" defaultValue="false"/>
+            <column name="image_preview_url" type="varchar(1024)"/>
+            <column name="topic_id" type="bigserial"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created_by" type="varchar(255)"/>
+            <column name="updated_by" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="video_courses"
+                                 baseColumnNames="topic_id"
+                                 referencedTableName="course_topics"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_video_course_topic"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="video_courses" constraintName="fk_video_course_topic"/>
+            <dropTable tableName="video_courses"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00010-5-create-audio-course-tags-table" author="Roman_Kiryukhin">
+        <createTable tableName="audio_course_tags">
+            <column name="audio_course_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="audio_course_id, course_tag_id"
+                       tableName="audio_course_tags"
+                       constraintName="pk_audio_course_tags"/>
+        <addForeignKeyConstraint baseTableName="audio_course_tags"
+                                 baseColumnNames="audio_course_id"
+                                 referencedTableName="audio_courses"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_audio_course_tags_audio"/>
+        <addForeignKeyConstraint baseTableName="audio_course_tags"
+                                 baseColumnNames="course_tag_id"
+                                 referencedTableName="course_tags"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_audio_course_tags_tag"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="audio_course_tags" constraintName="fk_audio_course_tags_audio"/>
+            <dropForeignKeyConstraint baseTableName="audio_course_tags" constraintName="fk_audio_course_tags_tag"/>
+            <dropPrimaryKey tableName="audio_course_tags"/>
+            <dropTable tableName="audio_course_tags"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00010-6-create-video-course-tags-table" author="Roman_Kiryukhin">
+        <createTable tableName="video_course_tags">
+            <column name="video_course_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="video_course_id, course_tag_id"
+                       tableName="video_course_tags"
+                       constraintName="pk_video_course_tags"/>
+        <addForeignKeyConstraint baseTableName="video_course_tags"
+                                 baseColumnNames="video_course_id"
+                                 referencedTableName="video_courses"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_video_course_tags_video"/>
+        <addForeignKeyConstraint baseTableName="video_course_tags"
+                                 baseColumnNames="course_tag_id"
+                                 referencedTableName="course_tags"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_video_course_tags_tag"/>
+        <rollback>
+            <dropForeignKeyConstraint baseTableName="video_course_tags" constraintName="fk_video_course_tags_video"/>
+            <dropForeignKeyConstraint baseTableName="video_course_tags" constraintName="fk_video_course_tags_tag"/>
+            <dropPrimaryKey tableName="video_course_tags"/>
+            <dropTable tableName="video_course_tags"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
