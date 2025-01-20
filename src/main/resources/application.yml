@@ -3,6 +3,10 @@ server:
   servlet:
     context-path: /api
 
+api:
+  base-url: ${BASE_DIR}
+  version: v1
+  timeout: 5000
 
 spring:
   profiles:
@@ -98,6 +102,9 @@ spring:
 
 file-storage:
   type: # yandex_s3 or local
+  local:
+    path:
+    endpoint: /files
 secrets:
   jwt:
     EXPIRES_ACCESS_TOKEN_MINUTE:
