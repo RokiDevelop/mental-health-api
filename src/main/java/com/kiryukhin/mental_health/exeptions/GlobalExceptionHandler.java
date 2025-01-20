@@ -10,6 +10,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ProblemDetail handleBadRequestException(BadRequestException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+        problemDetail.setTitle("Bad Request Exception");
+        problemDetail.setProperty("error", "BadRequestException");
+        return problemDetail;
+    }
+
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {
@@ -79,6 +89,24 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problemDetail.setTitle("Error");
         problemDetail.setProperty("error", "RuntimeException");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleObjectNotFound(ObjectNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("Object Not Found");
+        problemDetail.setProperty("error", "ObjectNotFoundException");
+        return problemDetail;
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ProblemDetail handleEntityNotFound(EntityNotFoundException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problemDetail.setTitle("Not found");
+        problemDetail.setProperty("error", "EntityNotFoundException");
         return problemDetail;
     }
 }
