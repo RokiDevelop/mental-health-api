@@ -3,6 +3,10 @@ server:
   servlet:
     context-path: /api
 
+api:
+  base-url: ${BASE_DIR}
+  version: v1
+  timeout: 5000
 
 spring:
   profiles:
@@ -95,6 +99,19 @@ spring:
         smtp:
           auth: true
           starttls.enable: true
+
+file-storage:
+  type: # yandex_s3 or local
+  local:
+    path:
+    endpoint: /files
+  yandex_s3:
+    endpoint:
+    access-key:
+    secret-key:
+    region:
+    bucket-name:
+    is-closed:
 
 secrets:
   jwt:

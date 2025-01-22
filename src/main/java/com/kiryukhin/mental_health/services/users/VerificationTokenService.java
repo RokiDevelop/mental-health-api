@@ -1,4 +1,4 @@
-package com.kiryukhin.mental_health.servicesLogic;
+package com.kiryukhin.mental_health.services.users;
 
 import com.kiryukhin.mental_health.exeptions.TokenFailedException;
 import com.kiryukhin.mental_health.models.TokenPurpose;

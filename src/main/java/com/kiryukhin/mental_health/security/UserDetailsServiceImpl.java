@@ -3,7 +3,7 @@ package com.kiryukhin.mental_health.security;
 import com.kiryukhin.mental_health.models.AuthProvider;
 import com.kiryukhin.mental_health.models.User;
 import com.kiryukhin.mental_health.repositories.UserRepository;
-import com.kiryukhin.mental_health.servicesLogic.UserService;
+import com.kiryukhin.mental_health.services.users.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

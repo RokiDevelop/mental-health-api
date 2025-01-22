@@ -1,4 +1,4 @@
-package com.kiryukhin.mental_health.servicesLogic;
+package com.kiryukhin.mental_health.services.users;
 
 import com.kiryukhin.mental_health.dtos.RoleDto;
 import com.kiryukhin.mental_health.dtos.UserCreateDto;

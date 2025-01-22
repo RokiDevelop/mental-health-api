@@ -1,7 +1,7 @@
 package com.kiryukhin.mental_health.security;
 
 import com.kiryukhin.mental_health.exeptions.TokenFailedException;
-import com.kiryukhin.mental_health.servicesLogic.TokenService;
+import com.kiryukhin.mental_health.services.users.TokenService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

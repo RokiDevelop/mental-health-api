@@ -1,10 +1,13 @@
 package com.kiryukhin.mental_health.models;
 
+import com.kiryukhin.mental_health.models.meetings.GroupPractice;
+import com.kiryukhin.mental_health.models.meetings.IndividualConsultation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -53,4 +56,10 @@ public class User extends BaseEntity {
 
     @Column(nullable = false)
     private boolean isSuperuser = false;
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private Set<GroupPractice> groupPractices = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private Set<IndividualConsultation> individualConsultations = new HashSet<>();
 }
