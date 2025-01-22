@@ -6,7 +6,7 @@ RUN apt update && apt install -y iputils-ping net-tools netcat
 WORKDIR /app
 COPY ./pom.xml ./
 
-RUN mvn dependency:go-offline
+RUN mvn dependency:resolve
 
 COPY . .
 RUN mvn clean package -DskipTests
