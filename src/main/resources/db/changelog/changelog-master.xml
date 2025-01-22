@@ -16,6 +16,6 @@
     <include file="db/changelog/changes/00008-add-check-constraint-username-and-email.xml"/>
     <include file="db/changelog/changes/00009-add-unique-username-field-to-users.xml"/>
     <include file="db/changelog/changes/00010-initiate-course-tag-topic-tables.xml"/>
-    <include file="db/changelog/changes/00011-add-topics-data-and-tags-data.xml"/>
+    <include file="db/changelog/changes/00011-initiate-consultation-and-practice.xml"/>
 
 </databaseChangeLog>

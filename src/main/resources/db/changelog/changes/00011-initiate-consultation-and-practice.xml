@@ -1,0 +1,67 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd">
+
+    <changeSet id="00011-1-create-individual-consultation-table" author="Roman_Kiryukhin">
+        <createTable tableName="individual_consultations">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="details" type="TEXT"/>
+            <column name="description" type="VARCHAR(2000)"/>
+            <column name="is_visible" type="BOOLEAN"/>
+            <column name="date_time_start" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="duration" type="INTEGER"/>
+            <column name="is_started" type="BOOLEAN"/>
+            <column name="is_finished" type="BOOLEAN"/>
+            <column name="comment" type="VARCHAR(1000)"/>
+            <column name="is_reserved" type="BOOLEAN"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true" foreignKeyName="fk_individual_consultations_user" references="users(id)"/>
+            </column>
+        </createTable>
+        <rollback>
+            <dropTable tableName="individual_consultations"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00011-2-create-group-practice-table" author="Roman_Kiryukhin">
+        <createTable tableName="group_practices">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="details" type="TEXT"/>
+            <column name="description" type="VARCHAR(2000)"/>
+            <column name="is_visible" type="BOOLEAN"/>
+            <column name="date_time_start" type="TIMESTAMP WITH TIME ZONE"/>
+            <column name="duration" type="INTEGER"/>
+            <column name="is_started" type="BOOLEAN"/>
+            <column name="is_finished" type="BOOLEAN"/>
+            <column name="comment" type="VARCHAR(1000)"/>
+            <column name="image_preview_url" type="VARCHAR(1024)"/>
+        </createTable>
+        <rollback>
+            <dropTable tableName="group_practices"/>
+        </rollback>
+    </changeSet>
+
+    <changeSet id="00011-3-create-group-practice2user-table" author="Roman_Kiryukhin">
+        <createTable tableName="group_practice2user">
+            <column name="group_practice_id" type="UUID">
+                <constraints nullable="false" foreignKeyName="fk_group_practice2user_group_practice" references="group_practices(id)"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_group_practice2user_user" references="users(id)"/>
+            </column>
+        </createTable>
+        <addPrimaryKey tableName="group_practice2user" columnNames="group_practice_id, user_id" constraintName="pk_group_practice2user"/>
+        <rollback>
+            <dropTable tableName="group_practice2user"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>
