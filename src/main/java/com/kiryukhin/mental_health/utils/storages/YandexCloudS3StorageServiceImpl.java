@@ -31,7 +31,7 @@ import java.util.UUID;
 @Service
 @Log4j2
 @RequiredArgsConstructor
-public class YandexCloudS3StorageServiceImpl implements StorageService {
+public class YandexCloudS3StorageServiceImpl implements YandexAnyStorageService {
     private final S3Client s3Client;
     private final YandexCloudConfig yandexCloudConfig;
 

@@ -19,7 +19,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class LocalStorageServiceImpl implements StorageService {
+public class LocalAnyStorageServiceImpl implements LocalAnyStorageService {
     private final LocalStorageConfig localStorageConfig;
     private final ApiConfig apiConfig;
 

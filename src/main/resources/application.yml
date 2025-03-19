@@ -9,8 +9,10 @@ api:
   timeout: 5000
 
 spring:
+  config:
+    import: "optional:file:${env.file}"
   profiles:
-    active: dev
+    active:
   jmx:
     enabled: false
   application:
@@ -46,8 +48,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-request-size: 10MB
-      max-file-size: 10MB
+      max-file-size: 20MB
+      max-request-size: 20MB
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/changelog-master.xml
@@ -134,6 +136,14 @@ token:
     expiry:
       duration: 600
 
+bunny:
+  cdn:
+    storageZone:
+    apiKey:
+  stream:
+    libraryId:
+    apiKey:
+    baseUrl:
 
 logging:
   level:

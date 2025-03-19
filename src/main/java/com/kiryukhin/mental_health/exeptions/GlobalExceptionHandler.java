@@ -32,6 +32,15 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
+    @ExceptionHandler(StorageItemAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ProblemDetail handleUploadStorageItemFailedException(StorageItemAlreadyExistsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problemDetail.setTitle("Storage Item Already Exists Exception");
+        problemDetail.setProperty("error", "StorageItemAlreadyExistsException");
+        return problemDetail;
+    }
+
     @ExceptionHandler(InternalAuthenticationServiceException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleInternalAuthenticationServiceException(InternalAuthenticationServiceException ex) {

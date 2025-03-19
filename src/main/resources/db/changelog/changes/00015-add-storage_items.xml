@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="00015-01-add-storage_items" author="Roman_Kiryukhin">
+        <createTable tableName="storage_items">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="storage_type" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="storage_object_id" type="VARCHAR(63)"/>
+            <column name="url" type="VARCHAR(511)"/>
+            <column name="video_course_part_id" type="BIGINT">
+                <constraints foreignKeyName="fk_storage_items_video_course_part" referencedTableName="video_course_parts" referencedColumnNames="id"/>
+            </column>
+            <column name="audio_course_part_id" type="BIGINT">
+                <constraints foreignKeyName="fk_storage_items_audio_course_part" referencedTableName="audio_course_parts" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <rollback>
+            <dropTable tableName="storage_items"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

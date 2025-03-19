@@ -1,6 +1,6 @@
 package com.kiryukhin.mental_health.controllers;
 
-import com.kiryukhin.mental_health.utils.storages.StorageService;
+import com.kiryukhin.mental_health.utils.storages.AnyFileStorageService;
 import com.kiryukhin.mental_health.utils.storages.StorageServiceFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -28,7 +28,7 @@ public class FileController {
 
     @GetMapping
     public ResponseEntity<Resource> getFile(@RequestParam(name = "fileKey") String fileKey) {
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService(AnyFileStorageService.class);
 
         Resource resource = storageService.downloadFile(fileKey);
         if (!resource.exists() || !resource.isReadable()) {
