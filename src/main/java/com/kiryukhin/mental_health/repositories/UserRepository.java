@@ -36,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User getByEmail(@NotBlank @Email String email);
 
     User getByUsernameOrEmail(@NotBlank String username, @NotBlank @Email String email);
+
+    Optional<User> findByUsernameAndIsBlockedFalse(String username);
 }

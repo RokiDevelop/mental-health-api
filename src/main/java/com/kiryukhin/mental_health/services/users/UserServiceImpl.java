@@ -11,6 +11,7 @@ import com.kiryukhin.mental_health.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -172,6 +173,24 @@ public class UserServiceImpl implements UserService {
         Optional<User> userOptional = repository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
         return userOptional.orElseThrow(() ->
                 new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
+    }
+
+    @Override
+    public User getEntityByUsernameAndIsBlockedFalse(String username) {
+        Optional<User> userOptional = repository.findByUsernameAndIsBlockedFalse(username);
+        return userOptional.orElseThrow(() ->
+                new UsernameNotFoundException("User not found with username : " + username));
+    }
+
+    @Override
+    public User getEntityByAuthenticationOrReturnNull(Authentication authentication) {
+        if (authentication != null) {
+            String username = authentication.getName();
+            Optional<User> userOptional = repository.findByUsernameAndIsBlockedFalse(username);
+            return userOptional.orElseThrow(() ->
+                    new UsernameNotFoundException("User not found with username : " + username));
+        }
+        return null;
     }
 
     @Override

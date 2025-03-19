@@ -4,6 +4,7 @@ import com.kiryukhin.mental_health.dtos.UserCreateDto;
 import com.kiryukhin.mental_health.dtos.UserUpdateDto;
 import com.kiryukhin.mental_health.dtos.responses.UserResponseDto;
 import com.kiryukhin.mental_health.models.User;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.Set;
@@ -37,4 +38,8 @@ public interface UserService {
     User getUserForUserDetails(String usernameOrEmail);
 
     Set<String> findUsernameSetByUsername(String username);
+
+    User getEntityByUsernameAndIsBlockedFalse(String username);
+
+    User getEntityByAuthenticationOrReturnNull(Authentication authentication);
 }
