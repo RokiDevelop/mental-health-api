@@ -9,7 +9,7 @@ import com.kiryukhin.mental_health.models.courses.CourseTag;
 import com.kiryukhin.mental_health.models.courses.CourseTopic;
 import com.kiryukhin.mental_health.models.courses.VideoCourse;
 import com.kiryukhin.mental_health.repositories.courses.VideoCourseRepository;
-import com.kiryukhin.mental_health.utils.storages.StorageService;
+import com.kiryukhin.mental_health.utils.storages.AnyFileStorageService;
 import com.kiryukhin.mental_health.utils.storages.StorageServiceFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -83,7 +83,7 @@ public class VideoCourseServiceImpl implements VideoCourseService<VideoCourseRes
     }
 
     private VideoCourseResponseDto getVideoCourseResponseDtoWithFullImagePreviewUrl(VideoCourse videoCourse) {
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         VideoCourseResponseDto dto = videoCourseMapper.toVideoCourseResponseDto(videoCourse);
 
         if (videoCourse.getImagePreviewUrl() != null) {
@@ -92,6 +92,12 @@ public class VideoCourseServiceImpl implements VideoCourseService<VideoCourseRes
         }
 
         return dto;
+    }
+
+    @Override
+    public VideoCourse getVideoCourseEntityById(UUID id) {
+        Optional<VideoCourse> videoCourseOptional = videoCourseRepository.findByIdAndIsPublishedTrue(id);
+        return videoCourseOptional.orElseThrow(() -> new EntityNotFoundExceptionCustom(VideoCourse.class));
     }
 }
 

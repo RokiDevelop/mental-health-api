@@ -17,5 +17,9 @@
     <include file="db/changelog/changes/00009-add-unique-username-field-to-users.xml"/>
     <include file="db/changelog/changes/00010-initiate-course-tag-topic-tables.xml"/>
     <include file="db/changelog/changes/00011-initiate-consultation-and-practice.xml"/>
+    <include file="db/changelog/changes/00012-version-to-meetings-and-courses.xml"/>
+    <include file="db/changelog/changes/00013-add-video-course-parts.xml"/>
+    <include file="db/changelog/changes/00014-add-audio-course-parts.xml"/>
+    <include file="db/changelog/changes/00015-add-storage_items.xml"/>
 
 </databaseChangeLog>

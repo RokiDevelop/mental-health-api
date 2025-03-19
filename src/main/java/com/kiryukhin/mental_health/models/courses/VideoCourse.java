@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -18,7 +20,7 @@ import java.util.Set;
 public class VideoCourse extends Course {
 
     @ManyToMany(
-            fetch = FetchType.EAGER,
+            fetch = FetchType.LAZY,
             cascade = CascadeType.MERGE)
     @JoinTable(
             name = "video_course_tags",
@@ -27,7 +29,10 @@ public class VideoCourse extends Course {
     )
     private Set<CourseTag> tags = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "topic_id")
     private CourseTopic topic;
+
+    @OneToMany(mappedBy = "videoCourse")
+    private List<VideoCoursePart> videoCourseParts = new ArrayList<>();
 }

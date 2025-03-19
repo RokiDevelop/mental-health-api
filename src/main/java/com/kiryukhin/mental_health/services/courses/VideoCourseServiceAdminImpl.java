@@ -10,7 +10,7 @@ import com.kiryukhin.mental_health.models.courses.CourseTag;
 import com.kiryukhin.mental_health.models.courses.CourseTopic;
 import com.kiryukhin.mental_health.models.courses.VideoCourse;
 import com.kiryukhin.mental_health.repositories.courses.VideoCourseRepository;
-import com.kiryukhin.mental_health.utils.storages.StorageService;
+import com.kiryukhin.mental_health.utils.storages.AnyFileStorageService;
 import com.kiryukhin.mental_health.utils.storages.StorageServiceFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -86,7 +86,7 @@ public class VideoCourseServiceAdminImpl implements VideoCourseServiceAdmin<Vide
         VideoCourse videoCourse = optionalVideoCourse.orElseThrow(() ->
                 new EntityNotFoundExceptionCustom(VideoCourse.class));
 
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         String key;
         if (videoCourse.getImagePreviewUrl() != null && !videoCourse.getImagePreviewUrl().isBlank()) {
             try {
@@ -174,7 +174,7 @@ public class VideoCourseServiceAdminImpl implements VideoCourseServiceAdmin<Vide
     }
 
     private VideoCourseAdminResponseDto getVideoCourseAdminResponseDtoWithFullImagePreviewUrl(VideoCourse videoCourse) {
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         VideoCourseAdminResponseDto dto = videoCourseMapper.toVideoCourseAdminResponseDto(videoCourse);
 
         if (videoCourse.getImagePreviewUrl() != null) {

@@ -23,7 +23,7 @@ public class VideoCourseController {
     private final VideoCourseService<VideoCourseResponseDto> videoCourseService;
 
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PaginationResponseDto<VideoCourseResponseDto>> getAllVideoCourse(
             @PageableDefault(size = 10, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) String filter) {

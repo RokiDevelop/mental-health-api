@@ -29,7 +29,7 @@ public class AudioCourseController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PaginationResponseDto<AudioCourseResponseDto>> getAllAudioCourse(
             @PageableDefault(size = 10, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) String filter) {

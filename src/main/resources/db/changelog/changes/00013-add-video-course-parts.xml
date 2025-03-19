@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.27.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet id="00013-01-add-video-course-parts" author="Roman_Kiryukhin">
+        <createTable tableName="video_course_parts">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="PK_video_course_parts"/>
+            </column>
+            <column name="title" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(2048)"/>
+            <column name="order_index" type="INT"/>
+            <column name="video_course_id" type="uuid">
+                <constraints nullable="false" foreignKeyName="fk_video_course_parts_video_course"
+                             referencedTableName="video_courses" referencedColumnNames="id"/>
+            </column>
+            <column name="version" type="bigint" defaultValue="0"/>
+        </createTable>
+
+        <addUniqueConstraint
+                tableName="video_course_parts"
+                columnNames="order_index, video_course_id"
+                constraintName="uk_video_course_parts_order_video_course"/>
+
+        <rollback>
+            <dropTable tableName="video_course_parts"/>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

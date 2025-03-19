@@ -66,6 +66,8 @@ public class SecurityConfig {
                         .requestMatchers("/users", "/users/**").hasRole("ADMIN")
                         .requestMatchers("/video-courses/**").permitAll()
                         .requestMatchers("/audio-courses/**").permitAll()
+                        .requestMatchers("/course-tags/**").permitAll()
+                        .requestMatchers("/course-topics/**").permitAll()
 
                         .requestMatchers("/files**").permitAll()
 

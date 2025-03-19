@@ -10,7 +10,7 @@ import com.kiryukhin.mental_health.models.courses.AudioCourse;
 import com.kiryukhin.mental_health.models.courses.CourseTag;
 import com.kiryukhin.mental_health.models.courses.CourseTopic;
 import com.kiryukhin.mental_health.repositories.courses.AudioCourseRepository;
-import com.kiryukhin.mental_health.utils.storages.StorageService;
+import com.kiryukhin.mental_health.utils.storages.AnyFileStorageService;
 import com.kiryukhin.mental_health.utils.storages.StorageServiceFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
@@ -86,7 +86,7 @@ public class AudioCourseServiceAdminImpl implements AudioCourseServiceAdmin<Audi
         AudioCourse audioCourse = optionalAudioCourse.orElseThrow(() ->
                 new EntityNotFoundExceptionCustom(AudioCourse.class));
 
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         String key;
         if (audioCourse.getImagePreviewUrl() != null && !audioCourse.getImagePreviewUrl().isBlank()) {
             try {
@@ -174,7 +174,7 @@ public class AudioCourseServiceAdminImpl implements AudioCourseServiceAdmin<Audi
     }
 
     private AudioCourseAdminResponseDto getAudioCourseAdminResponseDtoWithFullImagePreviewUrl(AudioCourse audioCourse) {
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         AudioCourseAdminResponseDto dto = audioCourseMapper.toAudioCourseAdminResponseDto(audioCourse);
 
         if (audioCourse.getImagePreviewUrl() != null) {

@@ -1,27 +1,23 @@
 package com.kiryukhin.mental_health.repositories.courses;
 
-import com.kiryukhin.mental_health.models.courses.QAudioCourse;
 import com.kiryukhin.mental_health.models.courses.QVideoCourse;
 import com.kiryukhin.mental_health.models.courses.VideoCourse;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class CustomVideoCourseRepositoryImpl implements CustomVideoCourseRepository<VideoCourse>{
+public class CustomVideoCourseRepositoryImpl implements CustomVideoCourseRepository<VideoCourse> {
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -94,7 +90,7 @@ public class CustomVideoCourseRepositoryImpl implements CustomVideoCourseReposit
         );
     }
 
-    private List<? extends OrderSpecifier<? extends Serializable>> createOrderSpecifiers(Pageable pageable, QVideoCourse videoCourse){
+    private List<? extends OrderSpecifier<? extends Serializable>> createOrderSpecifiers(Pageable pageable, QVideoCourse videoCourse) {
         return pageable.getSort().stream()
                 .map(order -> {
                     String property = order.getProperty();

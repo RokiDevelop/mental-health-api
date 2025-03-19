@@ -51,4 +51,8 @@ public abstract class Meeting {
 
     @Column(name = "comment", length = 1000)
     private String comment;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 }

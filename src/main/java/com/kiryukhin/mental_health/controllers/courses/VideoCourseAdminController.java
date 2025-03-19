@@ -26,7 +26,7 @@ public class VideoCourseAdminController {
     private final VideoCourseServiceAdmin<VideoCourseAdminResponseDto> videoCourseService;
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<VideoCourseAdminResponseDto> createVideoCourse(@RequestBody VideoCourseRequestDto videoCourseRequestDto) throws BadRequestException {
         VideoCourseAdminResponseDto responseDto = videoCourseService.createCourse(videoCourseRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -39,7 +39,7 @@ public class VideoCourseAdminController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PaginationResponseDto<VideoCourseAdminResponseDto>> getAllVideoCourses(
             @PageableDefault(size = 10, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) String filter) {
@@ -55,11 +55,7 @@ public class VideoCourseAdminController {
 
     @PutMapping("/{id}")
     public ResponseEntity<VideoCourseAdminResponseDto> updateVideoCourse(@PathVariable UUID id,
-                                               @RequestBody VideoCourseRequestDto videoCourseRequestDto)
-            throws BadRequestException {
-        if (!id.equals(videoCourseRequestDto.getId())) {
-            throw new BadRequestException("IDs do not match");
-        }
+                                               @RequestBody VideoCourseRequestDto videoCourseRequestDto) {
 
         VideoCourseAdminResponseDto responseDto = videoCourseService.updateCourse(id, videoCourseRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

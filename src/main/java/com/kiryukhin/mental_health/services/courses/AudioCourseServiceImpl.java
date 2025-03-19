@@ -9,7 +9,7 @@ import com.kiryukhin.mental_health.models.courses.AudioCourse;
 import com.kiryukhin.mental_health.models.courses.CourseTag;
 import com.kiryukhin.mental_health.models.courses.CourseTopic;
 import com.kiryukhin.mental_health.repositories.courses.AudioCourseRepository;
-import com.kiryukhin.mental_health.utils.storages.StorageService;
+import com.kiryukhin.mental_health.utils.storages.AnyFileStorageService;
 import com.kiryukhin.mental_health.utils.storages.StorageServiceFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -86,8 +86,14 @@ public class AudioCourseServiceImpl implements AudioCourseService<AudioCourseRes
         return paginationMapper.toPaginationResponseDto(audioCoursePageDto);
     }
 
+    @Override
+    public AudioCourse getAudioCourseEntityById(UUID id) {
+        Optional<AudioCourse> audioCourseOptional = audioCourseRepository.findByIdAndIsPublishedTrue(id);
+        return audioCourseOptional.orElseThrow(() -> new EntityNotFoundExceptionCustom(AudioCourse.class));
+    }
+
     private AudioCourseResponseDto getAudioCourseResponseDtoWithFullImagePreviewUrl(AudioCourse audioCourse) {
-        StorageService storageService = storageServiceFactory.getStorageService();
+        AnyFileStorageService storageService = storageServiceFactory.getStorageService();
         AudioCourseResponseDto dto = audioCourseMapper.toAudioCourseResponseDto(audioCourse);
 
         if (audioCourse.getImagePreviewUrl() != null) {

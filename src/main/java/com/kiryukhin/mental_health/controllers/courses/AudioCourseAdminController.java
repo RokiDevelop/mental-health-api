@@ -26,7 +26,7 @@ public class AudioCourseAdminController {
     private final AudioCourseServiceAdmin<AudioCourseAdminResponseDto> audioCourseService;
 
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<AudioCourseAdminResponseDto> createAudioCourse(@RequestBody AudioCourseRequestDto audioCourseRequestDto) throws BadRequestException {
         AudioCourseAdminResponseDto responseDto = audioCourseService.createCourse(audioCourseRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
@@ -39,7 +39,7 @@ public class AudioCourseAdminController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<PaginationResponseDto<AudioCourseAdminResponseDto>> getAllAudioCourse(
             @PageableDefault(size = 10, sort = "createdDateTime", direction = Sort.Direction.DESC) Pageable pageable,
             @RequestParam(required = false) String filter) {
@@ -55,11 +55,7 @@ public class AudioCourseAdminController {
 
     @PutMapping("/{id}")
     public ResponseEntity<AudioCourseAdminResponseDto> updateAudioCourse(@PathVariable UUID id,
-                                                                         @RequestBody AudioCourseRequestDto audioCourseRequestDto)
-            throws BadRequestException {
-        if (!id.equals(audioCourseRequestDto.getId())) {
-            throw new BadRequestException("IDs do not match");
-        }
+                                                                         @RequestBody AudioCourseRequestDto audioCourseRequestDto) {
 
         AudioCourseAdminResponseDto responseDto = audioCourseService.updateCourse(id, audioCourseRequestDto);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
