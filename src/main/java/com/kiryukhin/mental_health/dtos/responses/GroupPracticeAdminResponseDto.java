@@ -5,10 +5,11 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
-public class IndividualConsultationResponseDto {
+public class GroupPracticeAdminResponseDto {
     private UUID id;
     private String title;
     private String details;
@@ -18,14 +19,16 @@ public class IndividualConsultationResponseDto {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime dateTimeStart;
 
+    @JsonProperty("visible")
+    private boolean visible;
+
     @JsonProperty("started")
     private boolean started;
 
     @JsonProperty("finished")
     private boolean finished;
 
+    private String comment;
     private String imagePreviewUrl;
-
-    @JsonProperty("user_is_registered")
-    private boolean userIsRegistered;
+    private Set<UserResponseDto> users;
 }

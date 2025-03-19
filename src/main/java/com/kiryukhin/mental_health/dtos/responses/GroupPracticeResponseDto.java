@@ -25,4 +25,7 @@ public class GroupPracticeResponseDto {
     private boolean finished;
 
     private String imagePreviewUrl;
+
+    @JsonProperty("user_is_registered")
+    private boolean userIsRegistered;
 }

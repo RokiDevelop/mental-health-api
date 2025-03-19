@@ -9,11 +9,10 @@ import java.util.UUID;
 
 @Data
 public class IndividualConsultationRequestDto {
-    private UUID id;
     private String title;
     private String details;
     private String description;
-    private int duration;
+    private Integer duration;
     private String comment;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

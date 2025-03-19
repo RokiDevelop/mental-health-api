@@ -35,5 +35,5 @@ build/
 .vscode/
 
 *.env*
-/db-data-local/
 /.jpb/
+/data/
